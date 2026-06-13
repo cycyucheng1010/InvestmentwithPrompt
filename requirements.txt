@@ -1,0 +1,9 @@
+reportlab
+yfinance
+pandas
+numpy
+matplotlib
+requests
+beautifulsoup4
+google-generativeai
+pypdf
