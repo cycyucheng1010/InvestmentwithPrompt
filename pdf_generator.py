@@ -390,6 +390,31 @@ def build_pdf(filename, data):
     story.append(Paragraph(f"<b>表 3.1：{data['company_name']}財務基本數據與預估 (資料來源：{data.get('cfo_table_source', '')}，CFO 整理)</b>", ParagraphStyle('TableTitle', parent=body_style, fontName=f_normal, fontSize=8, textColor=colors.HexColor('#718096'))))
     story.append(fin_table)
 
+    # Historical 3-year table
+    hist_table_raw = data.get('hist_table_data', [])
+    if hist_table_raw:
+        hist_table_rows = []
+        for r_idx, row in enumerate(hist_table_raw):
+            row_cells = []
+            for c_idx, cell in enumerate(row):
+                if r_idx == 0:
+                    row_cells.append(Paragraph(cell, meta_label_style))
+                else:
+                    row_cells.append(Paragraph(cell, body_style))
+            hist_table_rows.append(row_cells)
+            
+        hist_table = Table(hist_table_rows, colWidths=[160, 105, 105, 117])
+        hist_table.setStyle(TableStyle([
+            ('BACKGROUND', (0,0), (-1,0), colors.HexColor('#EDF2F7')),
+            ('VALIGN', (0,0), (-1,-1), 'MIDDLE'),
+            ('BOTTOMPADDING', (0,0), (-1,-1), 6),
+            ('TOPPADDING', (0,0), (-1,-1), 6),
+            ('GRID', (0,0), (-1,-1), 0.5, colors.HexColor('#E2E8F0')),
+        ]))
+        story.append(Spacer(1, 15))
+        story.append(Paragraph(f"<b>表 3.2：{data['company_name']}過去三年歷史財務指標與股利分派 (CFO 整理)</b>", ParagraphStyle('TableTitle3', parent=body_style, fontName=f_normal, fontSize=8, textColor=colors.HexColor('#718096'))))
+        story.append(hist_table)
+
     story.append(PageBreak())
 
     # ================= PAGE 5: AR TECHNICAL & CHIPS REPORT =================
